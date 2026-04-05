@@ -1,0 +1,5 @@
+*
+!blogapp
+!tests
+!pyproject.toml
+!poetry.lock

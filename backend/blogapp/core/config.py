@@ -1,0 +1,55 @@
+import logging
+import os
+import time
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+log = logging.getLogger("blogapp")
+
+mode = os.getenv("FASTAPI_APP_MODE", "DEV")
+if mode == "DEV":
+    # 从 ".env.development" 文件加载环境变量，位于 /backend
+    # 不会覆盖已设置的环境变量。
+    # 生产环境变量在 docker-compose.yml 中设置
+    env_path = os.path.join(
+        os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        ),
+        ".env.development",
+    )
+    log.debug(f"[DEV MODE] .env 文件路径: {env_path}")
+    load_dotenv_result = load_dotenv(dotenv_path=env_path)
+elif mode == "PROD":
+    log.debug(f"[PROD MODE]")
+
+# 获取应用环境变量
+FASTAPI_SECRET_KEY = os.getenv("FASTAPI_SECRET_KEY", "")
+
+FASTAPI_CHATGPT_ALTERNATIVE_BASE = os.getenv("FASTAPI_CHATGPT_ALTERNATIVE_BASE", "")
+FASTAPI_CHATGPT_API_KEY = os.getenv("FASTAPI_CHATGPT_API_KEY", "")
+
+FASTAPI_CREATE_TEST_USERS = os.getenv("FASTAPI_CREATE_TEST_USERS", "DEV")
+FASTAPI_LOGGING_LEVEL = os.getenv("FASTAPI_LOGGING_LEVEL", "DEBUG")
+FASTAPI_MONGODB_URL = os.getenv("FASTAPI_MONGODB_URL", "")
+FASTAPI_MONGODB_DATABASE = os.getenv("FASTAPI_MONGODB_DATABASE", "")
+
+# 其他常量
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 600
+
+# 计算应用绝对路径
+BACKEND_DIR_PATH: Path = Path().parent.parent.absolute()
+
+# LOGGER
+LOGGER_NAME: str = "blogapp"
+LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
+LOGS_DIR_PATH: Path = BACKEND_DIR_PATH / "logs"
+LOG_FILE_PATH: Path = LOGS_DIR_PATH / f"""{time.strftime("%Y%m%d-%H%M%S")}.log"""
+
+# 用户头像
+DEFAULT_AVATAR_URL: str = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+AVATAR_PROVIDER_URL: str = "https://cdn-icons-png.flaticon.com"
+
+# 文章参数
+ARTICLE_MAX_LENGTH: int = 10000

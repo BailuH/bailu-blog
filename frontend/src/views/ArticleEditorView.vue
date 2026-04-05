@@ -1,0 +1,42 @@
+<script setup lang="ts">
+import { type ArticleDocumentResponse, DefaultService } from '@/client'
+import ArticleEditor from '@/components/ArticleEditor.vue'
+import { onBeforeMount, ref } from 'vue'
+import { onBeforeRouteUpdate, useRoute } from 'vue-router'
+
+const createMode = ref<boolean>(false)
+const editMode = ref<boolean>(false)
+const article = ref<ArticleDocumentResponse>()
+
+const route = useRoute()
+
+async function resolveView() {
+  if (route.path == '/create-article') {
+    createMode.value = true
+    console.log('文章创建模式')
+  } else {
+    const articleResponse = await DefaultService.readArticleArticlesArticleIdGet(
+      route.params.id.toString()
+    )
+    article.value = articleResponse.article
+    editMode.value = true
+    console.log('文章编辑模式')
+    console.log(article)
+  }
+}
+
+onBeforeMount(() => {
+  resolveView()
+})
+
+onBeforeRouteUpdate(() => {
+  resolveView()
+})
+</script>
+
+<template>
+  <q-page padding>
+    <ArticleEditor v-if="createMode" create-mode />
+    <ArticleEditor v-if="editMode" edit-mode :article-to-edit="article" />
+  </q-page>
+</template>
