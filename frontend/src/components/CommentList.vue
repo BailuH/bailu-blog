@@ -52,7 +52,7 @@ const reloadComments = async () => {
   comments.value = commentsResponse.comments
 }
 
-// 处理“回复”按钮点击的函数
+// 处理"回复"按钮点击的函数
 const handleReplyButtonClick = (commentId: string) => {
   activeReplyEditorCommentId.value = commentId
   newReplyText.value = ''
@@ -108,25 +108,30 @@ onBeforeMount(() => {
 
 <template>
   <!-- 文章评论和添加新评论表单 -->
-  <q-list class="column bg-secondary">
+  <q-list class="column bg-white q-pa-md rounded-borders shadow-1 q-mt-md">
     <!-- 无限滚动加载更多评论 -->
     <q-infinite-scroll @load="loadMore" :offset="10">
-      <div class="text-h5 text-white q-ml-md q-mt-md">评论</div>
+      <div class="text-h5 text-dark q-ml-md q-mt-md">评论</div>
 
       <!-- 添加新评论表单 -->
-      <div class="row q-mx-md q-mb-md q-pa-sm shadow-2 text-white">
+      <div class="row q-mx-md q-mb-md q-pa-sm bg-secondary rounded-borders text-dark">
         <q-input
           v-model="newCommentText"
           @focus="commentEditorIsActive = true"
           label="添加新评论..."
-          label-color="white"
+          label-color="grey-7"
           class="col-grow q-pa-sm"
+          outlined
+          dense
+          bg-color="white"
         />
         <q-btn
           v-if="commentEditorIsActive"
           @click="handleCommentSubmit"
           label="发送"
-          class="col-shrink self-center"
+          no-caps
+          flat
+          class="col-shrink self-center text-accent"
         />
       </div>
 
@@ -137,7 +142,7 @@ onBeforeMount(() => {
         :class="{ 'disabled-item': isCommentDisabled(comment._id!) }"
         class="column"
       >
-        <div class="row shadow-5 q-pa-xs">
+        <div class="row q-pa-xs border-bottom">
           <UserInfoCard :user="comment.author" small class="self-start q-mr-md" />
           <div class="col items-start">
             <!-- 评论作者信息及创建时间 -->
@@ -145,21 +150,21 @@ onBeforeMount(() => {
               <div class="col-grow row q-gutter-xs text-subtitle1">
                 <router-link
                   :to="{ name: 'user', params: { id: comment.author._id } }"
-                  class="text-white"
+                  class="text-accent text-weight-bold"
                 >
                   @{{ 'username' in comment.author ? comment.author.username : '' }}
                 </router-link>
-                <div v-if="comment.author._id == currentUser?._id" class="text-white">(您)</div>
+                <div v-if="comment.author._id == currentUser?._id" class="text-grey-6">(您)</div>
                 <div v-if="comment.author.role == 'Admin'" class="text-negative">管理员</div>
               </div>
-              <div class="col text-right">
+              <div class="col text-right text-grey-6 text-caption">
                 {{ comment.updated_at ? '(已编辑)' : '' }}
                 {{ moment(comment.created_at).format('hh:mm DD-MM-YYYY') }}
               </div>
             </div>
 
             <!-- 评论内容 -->
-            <q-item-section class="text-white">
+            <q-item-section class="text-dark q-py-sm">
               {{ comment.content }}
             </q-item-section>
 
@@ -168,11 +173,10 @@ onBeforeMount(() => {
               <q-btn
                 @click="handleReplyButtonClick(comment._id!)"
                 label="回复"
-                color="secondary"
+                color="grey-6"
                 no-caps
                 flat
                 padding="none"
-                text-color="white"
                 align="left"
               />
               <q-btn
@@ -183,6 +187,7 @@ onBeforeMount(() => {
                 no-caps
                 flat
                 padding="none"
+                class="text-negative"
               />
             </div>
           </div>
@@ -193,18 +198,23 @@ onBeforeMount(() => {
           <!-- 添加回复表单 -->
           <div
             v-if="activeReplyEditorCommentId === comment._id"
-            class="row shadow-2 q-my-xs q-pa-sm text-white"
+            class="row q-my-xs q-pa-sm bg-secondary rounded-borders text-dark"
           >
             <q-input
               v-model="newReplyText"
               label="添加回复..."
-              label-color="white"
+              label-color="grey-7"
               class="col-grow q-px-sm"
+              outlined
+              dense
+              bg-color="white"
             />
             <q-btn
               @click="handleReplySubmit(comment._id!)"
               label="发送"
-              class="col-shrink self-center"
+              no-caps
+              flat
+              class="col-shrink self-center text-accent"
             />
           </div>
 
@@ -213,7 +223,7 @@ onBeforeMount(() => {
             v-for="reply in comment.replies"
             :key="reply._id!"
             :class="{ 'disabled-item': isCommentDisabled(reply._id!) }"
-            class="row shadow-2 q-my-xs q-pa-sm"
+            class="row q-my-xs q-pa-sm bg-secondary rounded-borders"
           >
             <UserInfoCard :user="reply.author" small class="self-start q-mr-md" />
             <div class="col items-start">
@@ -222,21 +232,21 @@ onBeforeMount(() => {
                 <div class="col-grow row q-gutter-xs text-subtitle1">
                   <router-link
                     :to="{ name: 'user', params: { id: comment.author._id } }"
-                    class="text-white"
+                    class="text-accent text-weight-bold"
                   >
                     @{{ 'username' in comment.author ? comment.author.username : '' }}
                   </router-link>
-                  <div v-if="comment.author._id == currentUser?._id" class="text-white">(您)</div>
+                  <div v-if="comment.author._id == currentUser?._id" class="text-grey-6">(您)</div>
                   <div v-if="comment.author.role == 'Admin'" class="text-negative">管理员</div>
                 </div>
-                <div class="col-stretch text-right">
+                <div class="col-stretch text-right text-grey-6 text-caption">
                   {{ comment.updated_at ? '(已编辑)' : '' }}
                   {{ moment(comment.created_at).format('hh:mm DD-MM-YYYY') }}
                 </div>
               </div>
 
               <!-- 回复内容 -->
-              <div class="text-white">
+              <div class="text-dark q-py-sm">
                 {{ reply.content }}
               </div>
 
@@ -250,6 +260,7 @@ onBeforeMount(() => {
                   no-caps
                   flat
                   padding="none"
+                  class="text-negative"
                 />
               </div>
             </div>
@@ -260,9 +271,13 @@ onBeforeMount(() => {
   </q-list>
 </template>
 
-<style>
+<style scoped>
 .disabled-item {
   pointer-events: none; /* 禁用 q-item 及其子元素的交互 */
   opacity: 0.5; /* 可用于降低禁用元素的透明度 */
+}
+
+.border-bottom {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 </style>

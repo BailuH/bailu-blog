@@ -54,7 +54,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="column bg-secondary q-pa-md">
+  <div class="column q-pa-md">
     <!-- Header -->
     <div class="row justify-end q-mb-md">
       <!-- 排序选择器 -->
@@ -69,6 +69,9 @@ onBeforeMount(async () => {
         label="排序方式"
         @update:model-value="handleSelectorChange"
         class="col-3"
+        outlined
+        dense
+        bg-color="white"
       />
       <q-select
         v-model="sortOrder"
@@ -81,6 +84,9 @@ onBeforeMount(async () => {
         label="顺序"
         @update:model-value="handleSelectorChange"
         class="col-3 q-ml-md"
+        outlined
+        dense
+        bg-color="white"
       />
     </div>
 
@@ -89,7 +95,7 @@ onBeforeMount(async () => {
       <!-- 无限滚动 -->
       <q-infinite-scroll @load="loadMore" :offset="10">
         <!-- 用户 -->
-        <div v-for="user in users" :key="user._id!" class="row shadow-2 q-mb-lg q-pa-sm">
+        <div v-for="user in users" :key="user._id!" class="row bg-white q-mb-lg q-pa-md rounded-borders shadow-1">
           <!-- 头像和用户名 -->
           <router-link :to="{ name: 'user', params: { id: user._id } }" class="user-link col-2">
             <UserInfoCard :user="user" />
@@ -97,27 +103,29 @@ onBeforeMount(async () => {
           <!-- 用户信息 -->
           <div class="col-grow q-mx-md">
             <div class="row items-center">
-              <div class="text-h6">{{ user.username }}</div>
-              <div class="text-subtitle2 q-ml-sm">
+              <div class="text-h6 text-dark">{{ user.username }}</div>
+              <div class="text-subtitle2 q-ml-sm text-grey-6">
                 ({{ user.role ?? '账号未确认' }})
               </div>
               <div v-if="user.disabled" class="text-subtitle2 q-ml-sm text-negative">
                 [已封禁]
               </div>
             </div>
-            <div class="text-subtitle2">{{ user.email }}</div>
-            <div class="text-subtitle2">评论数：{{ user.comments_count ?? 'NULL' }}</div>
+            <div class="text-subtitle2 text-grey-7">{{ user.email }}</div>
+            <div class="text-subtitle2 text-grey-7">评论数：{{ user.comments_count ?? 'NULL' }}</div>
           </div>
           <!-- 操作 -->
           <div v-if="currentUserIsAdmin" class="col-2">
-            <div class="text-center">管理员操作</div>
+            <div class="text-center text-dark text-weight-bold">管理员操作</div>
             <q-separator class="q-mb-sm" />
             <q-btn
               v-if="!user.disabled"
-              class="q-mb-sm"
+              class="q-mb-sm full-width"
               label="封禁"
               @click="handleDisableUserButton(user._id!)"
               flat
+              no-caps
+              color="negative"
             />
           </div>
         </div>

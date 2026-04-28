@@ -92,17 +92,17 @@ async function handleRoleUpdate() {
 </script>
 
 <template>
-  <q-item v-if="user" class="row justify-start items-start q-pt-lg bg-secondary">
+  <q-item v-if="user" class="row justify-start items-start q-pt-lg bg-white rounded-borders shadow-1">
     <UserInfoCard :user="user" class="col" />
 
     <q-item-section class="col-grow items-start" style="overflow: auto">
-      <q-item-label lines="1" class="row text-h5 text-white">
+      <q-item-label lines="1" class="row text-h5 text-dark">
         <div class="q-mr-md">
           {{ user?.email }}
         </div>
         <div v-if="!user?.role" class="text-negative">(未确认)</div>
       </q-item-label>
-      <q-item-label class="text-caption text-white">
+      <q-item-label class="text-caption text-grey-6">
         ***用户其他信息区域***
       </q-item-label>
     </q-item-section>
@@ -116,6 +116,8 @@ async function handleRoleUpdate() {
         class="self-stretch"
         align="left"
         flat
+        no-caps
+        color="dark"
       />
       <q-btn
         v-if="editable"
@@ -124,6 +126,8 @@ async function handleRoleUpdate() {
         class="self-stretch"
         align="left"
         flat
+        no-caps
+        color="dark"
       />
       <q-btn
         v-if="editable"
@@ -132,6 +136,8 @@ async function handleRoleUpdate() {
         class="self-stretch"
         align="left"
         flat
+        no-caps
+        color="dark"
       />
       <q-select
         v-if="isAllowedToChangeUserRole"
@@ -140,55 +146,64 @@ async function handleRoleUpdate() {
         @update:model-value="handleRoleUpdate"
         label="设置角色"
         class="q-mx-md"
+        outlined
+        dense
       />
     </q-item-actions>
 
     <q-dialog v-model="showEmailDialog">
-      <q-card class="bg-secondary" style="width: 100%">
+      <q-card class="bg-white" style="width: 100%">
         <q-card-section class="q-pt-lg">
           <q-input
             v-model="newEmail"
             label="新邮箱"
             clearable
-            :input-style="{ fontSize: '25px' }"
+            :input-style="{ fontSize: '20px' }"
+            outlined
+            dense
           />
         </q-card-section>
 
-        <q-card-actions align="center" class="bg-secondary text-teal">
-          <q-btn label="修改" @click="handleEmailUpdate" v-close-popup flat />
+        <q-card-actions align="center" class="bg-white">
+          <q-btn label="修改" @click="handleEmailUpdate" v-close-popup flat no-caps color="accent" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <q-dialog v-model="showPasswordDialog">
-      <q-card class="bg-secondary" style="width: 100%">
+      <q-card class="bg-white" style="width: 100%">
         <q-card-section class="q-pt-lg">
           <q-input
             v-model="oldPassword"
             label="旧密码"
             v-if="isProfile"
             clearable
-            :input-style="{ fontSize: '25px' }"
+            :input-style="{ fontSize: '20px' }"
+            outlined
+            dense
+            class="q-mb-md"
           />
           <q-input
             v-model="newPassword"
             label="新密码"
             clearable
-            :input-style="{ fontSize: '25px' }"
+            :input-style="{ fontSize: '20px' }"
+            outlined
+            dense
           />
         </q-card-section>
 
-        <q-card-actions align="center" class="bg-secondary text-teal">
-          <q-btn label="修改" @click="handlePasswordUpdate" v-close-popup flat />
+        <q-card-actions align="center" class="bg-white">
+          <q-btn label="修改" @click="handlePasswordUpdate" v-close-popup flat no-caps color="accent" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <q-dialog v-model="showAvatarDialog">
-      <q-card class="bg-secondary" style="width: 100%">
+      <q-card class="bg-white" style="width: 100%">
         <q-card-section class="q-pt-lg">
-          <!-- 居中显示“选择头像” -->
-          <div class="text-center text-h6 text-white q-mb-md">选择头像</div>
+          <!-- 居中显示"选择头像" -->
+          <div class="text-center text-h6 text-dark q-mb-md">选择头像</div>
           <q-btn
             v-for="avatarUrl in [...avatarsToChoose, ...avatarsToChoose, ...avatarsToChoose]"
             :key="avatarUrl"

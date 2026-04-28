@@ -29,11 +29,11 @@ const avatarSizeStyle = computed(() => {
     <template v-if="!props.small">
       <q-item-label
         lines="1"
-        class="text-subtitle1 text-uppercase text-white text-weight-bold q-my-sm"
+        class="text-subtitle1 text-uppercase text-dark text-weight-bold q-my-sm"
       >
         {{ user?.username }}
       </q-item-label>
-      <q-item-label lines="1" class="text-subtitle2 text-white text-weight-bold q-my-sm">
+      <q-item-label lines="1" class="text-subtitle2 text-grey-6 text-weight-bold q-my-sm">
         <span v-if="user?.role == 'Author'" class="text-info">作者</span>
         <span v-else-if="user?.role == 'Admin'" class="text-negative">管理员</span>
       </q-item-label></template

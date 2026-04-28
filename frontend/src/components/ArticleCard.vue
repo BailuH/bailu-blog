@@ -28,12 +28,12 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="column bg-secondary q-pa-md">
+  <div class="column q-pa-md">
     <!-- 文章区块 -->
-    <div class="column shadow-2 q-pa-md">
+    <div class="column bg-white q-pa-md rounded-borders shadow-1">
       <!-- 带预览图背景的标题栏 -->
       <div
-        class="article-header q-pa-sm q-mb-md shadow-2"
+        class="article-header q-pa-sm q-mb-md rounded-borders"
         :style="{ backgroundImage: 'url(' + article?.preview_image_url + ')' }"
       >
         <div class="row justify-between items-center q-mb-md">
@@ -56,7 +56,7 @@ onBeforeMount(async () => {
                 :key="tag"
                 :to="{ name: 'home', query: { tag: tag } }"
               >
-                <q-chip :label="tag" size="sm" dark color="primary" />
+                <q-chip :label="tag" size="sm" color="secondary" text-color="dark" class="q-mr-xs" />
               </router-link>
             </div>
           </div>
@@ -68,23 +68,25 @@ onBeforeMount(async () => {
       </div>
 
       <!-- 文章正文 -->
-      <q-item-label
-        class="text-body1 text-white"
+      <div
+        class="text-body1 text-grey-7"
         v-html="article.content!.replace(/\n/g, '<br>')"
       />
 
-      <!-- “编辑文章”按钮 -->
+      <!-- "编辑文章"按钮 -->
       <q-btn
         v-if="isAllowedToEdit"
         label="编辑"
         :to="editLink"
-        class="self-end text-body q-ma-md"
+        flat
+        no-caps
+        class="self-end text-body q-ma-md text-accent"
       />
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .article-header {
   background-size: cover;
   background-position: center;
@@ -92,9 +94,6 @@ onBeforeMount(async () => {
 }
 
 .title-style {
-  /* background: linear-gradient(45deg, #ff0000, #ff7300);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; */
   text-shadow: 2px 2px 2px #00000044;
 }
 

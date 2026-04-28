@@ -15,7 +15,7 @@ class UserDocument(ExtendedDocument, UserBase):
     username: str
     email: EmailStr
     role: RolesEnum | None = None
-    disabled: bool | None = None
+    disabled: bool | None = None  #
     created_at: datetime | None = None
     updated_at: datetime | None = None
     password_hash: str | None = Field(default=None)

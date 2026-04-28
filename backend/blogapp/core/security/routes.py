@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -33,16 +33,22 @@ async def register_user(body: RegisterRequestBody):
     """创建新用户"""
     # 检查 username 和 email 是否已被占用
     existing_user = await UserDocument.find_one(UserDocument.email == body.email)
+
+    # print(f"[DEBUG] 查询结果: {existing_user}")
+    # print(f"[DEBUG] 类型: {type(existing_user)}")
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered",
+            detail=f"Email {body.email} already registered",
         )
+    
     existing_user = await UserDocument.find_one(UserDocument.username == body.username)
+    # print(f"[DEBUG] 查询结果: {existing_user}")
+    # print(f"[DEBUG] 类型: {type(existing_user)}")
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered",
+            detail=f"Username {body.username} already registered",
         )
 
     user = UserDocument(
@@ -50,7 +56,7 @@ async def register_user(body: RegisterRequestBody):
         password_hash=get_password_hash(body.password),
         email=body.email,
         disabled=False,
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(UTC),
     )
     await UserDocument.insert_one(user)
     return user

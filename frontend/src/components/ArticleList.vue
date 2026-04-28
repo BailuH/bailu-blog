@@ -96,7 +96,7 @@ onBeforeRouteUpdate(async (to, from) => {
 </script>
 
 <template>
-  <div class="column bg-secondary q-pa-md">
+  <div class="column q-pa-md">
     <!-- Header -->
     <div class="row justify-end">
       <div class="col-10">
@@ -105,22 +105,25 @@ onBeforeRouteUpdate(async (to, from) => {
           v-model="searchText"
           @keyup.enter="handleSearchbarSubmit"
           placeholder="搜索"
-          class="col-9 bg-secondary self-end"
+          class="col-9 bg-white self-end"
+          outlined
+          dense
+          bg-color="white"
         >
           <template v-slot:append>
-            <q-icon name="search" @click="handleSearchbarSubmit" class="cursor-pointer" />
-            <q-icon name="close" @click="handleSearchbarClear" class="cursor-pointer" />
+            <q-icon name="search" @click="handleSearchbarSubmit" class="cursor-pointer text-grey-6" />
+            <q-icon name="close" @click="handleSearchbarClear" class="cursor-pointer text-grey-6" />
           </template>
-          <!-- “按标签搜索”复选框 -->
+          <!-- "按标签搜索"复选框 -->
           <q-checkbox
             v-model="searchByTags"
             label="按标签搜索"
-            class="q-mr-sm"
+            class="q-mr-sm text-dark"
             @update:model-value="handleSearchbarSubmit"
           />
         </q-input>
         <!-- 搜索信息 -->
-        <div v-if="freezedSearchText.length > 0" class="row self-sta text-info q-mr-md q-mb-lg">
+        <div v-if="freezedSearchText.length > 0" class="row self-sta text-accent q-mr-md q-mb-lg">
           <div class="q-mr-md">搜索关键词：{{ freezedSearchText }}</div>
           <div>找到文章数：{{ total }}</div>
         </div>
@@ -137,11 +140,11 @@ onBeforeRouteUpdate(async (to, from) => {
         </div>
 
         <!-- 文章主体 -->
-        <div class="col column shadow-4 q-pa-sm">
+        <div class="col column bg-white q-pa-md rounded-borders shadow-1">
           <!-- HEADER - NO PREVIEW -->
           <div v-if="!article.preview_image_url" class="row justify-between q-mb-md full-width">
             <!-- 文章标题 -->
-            <div class="col text-h5 text-white text-weight-bold">
+            <div class="col text-h5 text-dark text-weight-bold">
               <router-link
                 style="color: inherit; align-self: start"
                 :to="'/article/' + article._id"
@@ -150,8 +153,8 @@ onBeforeRouteUpdate(async (to, from) => {
               </router-link>
             </div>
             <!-- 日期和标签 -->
-            <div class="col column items-end full-width ">
-              <q-item-label caption class="text-body flex-shrink">
+            <div class="col column items-end full-width">
+              <q-item-label caption class="text-body text-grey-6 flex-shrink">
                 {{ moment(article?.created_at).format('Do MMMM YYYY') }}
               </q-item-label>
               <div v-if="article?.tags">
@@ -160,7 +163,7 @@ onBeforeRouteUpdate(async (to, from) => {
                   :key="tag"
                   :to="{ name: 'home', query: { tag: tag } }"
                 >
-                  <q-chip :label="tag" size="sm" dark color="primary" />
+                  <q-chip :label="tag" size="sm" color="secondary" text-color="dark" class="q-mr-xs" />
                 </router-link>
               </div>
             </div>
@@ -188,7 +191,7 @@ onBeforeRouteUpdate(async (to, from) => {
                     :key="tag"
                     :to="{ name: 'home', query: { tag: tag } }"
                   >
-                    <q-chip :label="tag" size="sm" dark color="primary" />
+                    <q-chip :label="tag" size="sm" color="secondary" text-color="dark" class="q-mr-xs" />
                   </router-link>
                 </div>
               </div>
@@ -206,14 +209,13 @@ onBeforeRouteUpdate(async (to, from) => {
           </div>
 
           <!-- 文章内容 -->
-          <q-item-label
-            lines="5"
-            class="text-body1 text-white"
+          <div
+            class="text-body1 text-grey-7 line-clamp-5"
             v-html="article.content!.replace(/\n/g, '<br>')"
           />
-          <!-- “阅读全文”按钮 -->
-          <q-btn :to="'/article/' + article._id" flat class="float-right">
-            <q-item-label caption class="text-white">阅读全文 >>></q-item-label>
+          <!-- "阅读全文"按钮 -->
+          <q-btn :to="'/article/' + article._id" flat no-caps class="float-right text-accent">
+            <q-item-label caption>阅读全文 &rarr;</q-item-label>
           </q-btn>
         </div>
       </div>
@@ -226,11 +228,13 @@ onBeforeRouteUpdate(async (to, from) => {
       input
       :max="maxPage"
       class="self-center"
+      color="accent"
+      text-color="dark"
     />
   </div>
 </template>
 
-<style>
+<style scoped>
 .a {
   text-decoration: none;
 }
