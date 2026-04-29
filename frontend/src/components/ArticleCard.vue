@@ -5,7 +5,7 @@ import { useUserStore } from '@/stores/UserStore'
 import moment from 'moment'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
-
+import { MdPreview } from 'md-editor-v3'
 const props = defineProps<{
   article: ArticleDocumentResponse | undefined
 }>()
@@ -68,10 +68,7 @@ onBeforeMount(async () => {
       </div>
 
       <!-- 文章正文 -->
-      <div
-        class="text-body1 text-grey-7"
-        v-html="article.content!.replace(/\n/g, '<br>')"
-      />
+      <MdPreview :modelValue="article.content || ''" language="zh-CN" />
 
       <!-- "编辑文章"按钮 -->
       <q-btn

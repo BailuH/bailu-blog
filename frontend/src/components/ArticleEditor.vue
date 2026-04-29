@@ -3,6 +3,7 @@ import { DefaultService, type ArticleDocumentResponse } from '@/client'
 import router from '@/router'
 import { Notify } from 'quasar'
 import { ref } from 'vue'
+import { MdEditor } from 'md-editor-v3'
 
 export interface Props {
   articleToEdit?: ArticleDocumentResponse // 代表需要被编辑的文章，把父组件的文章数据回显到当前组件
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // const { createMode = false, editMode = false } = defineProps<Props>()
+
 
 const titleRef = ref<string>(
   props.articleToEdit?.title ? props.articleToEdit.title : ''
@@ -97,8 +99,12 @@ function handleAddTag() {
         outlined
         dense
       />
-      <q-editor v-model="conentRef" min-height="5rem" />
-
+      <MdEditor 
+        v-model="conentRef"
+        language="zh-CN"
+        placeholder=""
+        style="height: 500px"
+      />
       <!-- 预览图链接 -->
       <div class="row justify-between items-center q-pa-md">
         <q-input

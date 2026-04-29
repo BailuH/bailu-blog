@@ -6,6 +6,7 @@ import { onBeforeMount } from 'vue'
 import { DefaultService } from '@/client'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import moment from 'moment'
+import { MdPreview } from 'md-editor-v3'
 
 const route = useRoute()
 
@@ -209,10 +210,12 @@ onBeforeRouteUpdate(async (to, from) => {
           </div>
 
           <!-- 文章内容 -->
-          <div
-            class="text-body1 text-grey-7 line-clamp-5"
-            v-html="article.content!.replace(/\n/g, '<br>')"
-          />
+          <div class="preview-clamp">
+            <MdPreview
+              :modelValue="article.content || ''"
+              language="zh-CN"
+            />
+          </div>
           <!-- "阅读全文"按钮 -->
           <q-btn :to="'/article/' + article._id" flat no-caps class="float-right text-accent">
             <q-item-label caption>阅读全文 &rarr;</q-item-label>
@@ -257,5 +260,23 @@ onBeforeRouteUpdate(async (to, from) => {
   text-align: center;
   z-index: 1;
   text-shadow: 2px 2px 2px #00000044;
+}
+
+.preview-clamp {
+  position: relative;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+/* 底部渐变遮罩，避免硬截断 */
+.preview-clamp::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, white);
+  pointer-events: none;
 }
 </style>

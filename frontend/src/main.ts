@@ -12,6 +12,9 @@ import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
 import AuthService from './services/AuthService'
 
+// 导入md-editor的css全局样式
+import 'md-editor-v3/lib/style.css'
+
 const app = createApp(App)
 
 const pinia = createPinia()
