@@ -29,8 +29,8 @@ const loadMoreArticles = async () => {
     limit.value,
     undefined,
     undefined,
-    searchByTags.value ? searchInput : undefined, // tag
-    !searchByTags.value ? searchInput : undefined // searchQuery
+    searchByTags.value ? searchInput : undefined,
+    !searchByTags.value ? searchInput : undefined
   )
   articles.value = articlesResponse.articles
   total.value = articlesResponse.total
@@ -97,186 +97,524 @@ onBeforeRouteUpdate(async (to, from) => {
 </script>
 
 <template>
-  <div class="column q-pa-md">
-    <!-- Header -->
-    <div class="row justify-end">
-      <div class="col-10">
-        <!-- 搜索框 -->
+  <div class="column q-py-lg">
+    <!-- Header & Search -->
+    <div class="search-section q-mb-xl">
+      <div class="search-input-wrapper">
         <q-input
           v-model="searchText"
           @keyup.enter="handleSearchbarSubmit"
-          placeholder="搜索"
-          class="col-9 bg-white self-end"
+          placeholder="搜索文章..."
+          class="search-input"
           outlined
           dense
           bg-color="white"
         >
-          <template v-slot:append>
-            <q-icon name="search" @click="handleSearchbarSubmit" class="cursor-pointer text-grey-6" />
-            <q-icon name="close" @click="handleSearchbarClear" class="cursor-pointer text-grey-6" />
+          <template v-slot:prepend>
+            <q-icon name="search" class="search-icon" />
           </template>
-          <!-- "按标签搜索"复选框 -->
+          <template v-slot:append>
+            <q-icon
+              v-if="searchText"
+              name="close"
+              @click="handleSearchbarClear"
+              class="cursor-pointer clear-icon"
+            />
+            <q-btn
+              @click="handleSearchbarSubmit"
+              unelevated
+              color="accent"
+              size="sm"
+              class="search-btn"
+              icon="arrow_forward"
+              round
+            />
+          </template>
+        </q-input>
+        <div class="search-options row items-center q-mt-sm">
           <q-checkbox
             v-model="searchByTags"
             label="按标签搜索"
-            class="q-mr-sm text-dark"
+            class="tag-checkbox"
             @update:model-value="handleSearchbarSubmit"
+            dense
           />
-        </q-input>
-        <!-- 搜索信息 -->
-        <div v-if="freezedSearchText.length > 0" class="row self-sta text-accent q-mr-md q-mb-lg">
-          <div class="q-mr-md">搜索关键词：{{ freezedSearchText }}</div>
-          <div>找到文章数：{{ total }}</div>
+          <div v-if="freezedSearchText.length > 0" class="search-info row items-center q-ml-md">
+            <q-chip size="sm" color="accent" text-color="white" class="q-mr-sm">
+              {{ freezedSearchText }}
+            </q-chip>
+            <span class="text-caption text-grey-6">找到 {{ total }} 篇文章</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 文章列表 -->
-    <q-list separator padding>
-      <!-- 文章 -->
-      <div v-for="article in articles" :key="article._id ?? ''" class="row q-mb-lg">
-        <!-- 头像和作者名称 -->
-        <div class="col-auto q-mx-md">
-          <UserInfoCard :user="article.author" class="self-center" />
-        </div>
-
-        <!-- 文章主体 -->
-        <div class="col column bg-white q-pa-md rounded-borders shadow-1">
-          <!-- HEADER - NO PREVIEW -->
-          <div v-if="!article.preview_image_url" class="row justify-between q-mb-md full-width">
-            <!-- 文章标题 -->
-            <div class="col text-h5 text-dark text-weight-bold">
-              <router-link
-                style="color: inherit; align-self: start"
-                :to="'/article/' + article._id"
-              >
-                {{ article.title }}
-              </router-link>
-            </div>
-            <!-- 日期和标签 -->
-            <div class="col column items-end full-width">
-              <q-item-label caption class="text-body text-grey-6 flex-shrink">
-                {{ moment(article?.created_at).format('Do MMMM YYYY') }}
-              </q-item-label>
-              <div v-if="article?.tags">
-                <router-link
-                  v-for="tag in article?.tags"
-                  :key="tag"
-                  :to="{ name: 'home', query: { tag: tag } }"
-                >
-                  <q-chip :label="tag" size="sm" color="secondary" text-color="dark" class="q-mr-xs" />
-                </router-link>
-              </div>
-            </div>
-          </div>
-
-          <!-- 如果有预览图 -->
-          <div v-else class="q-mb-md rounded-borders" style="position: relative">
+    <!-- Articles -->
+    <div class="articles-list">
+      <div
+        v-for="article in articles"
+        :key="article._id ?? ''"
+        class="article-item"
+      >
+        <!-- With preview image -->
+        <div v-if="article.preview_image_url" class="article-card article-card--featured">
+          <div class="article-image-wrapper">
             <img
-              v-if="article?.preview_image_url"
               :src="article.preview_image_url"
               :alt="article.title ?? ''"
-              class="rounded-borders"
-              style="width: 100%; height: 250px; object-fit: cover"
+              class="article-image"
             />
-            <!-- 叠加文字 -->
-            <div class="overlay-text column justify-between q-mb-md">
-              <!-- 日期和标签 -->
-              <div class="col full-width full-height q-pt-md">
-                <q-item-label caption class="text-body flex-shrink">
-                  {{ moment(article?.created_at).format('Do MMMM YYYY') }}
-                </q-item-label>
-                <div v-if="article?.tags">
+            <div class="article-image-overlay">
+              <div class="article-meta-overlay">
+                <span class="article-date">{{ moment(article?.created_at).format('YYYY年M月D日') }}</span>
+                <div v-if="article?.tags" class="article-tags-overlay">
                   <router-link
                     v-for="tag in article?.tags"
                     :key="tag"
                     :to="{ name: 'home', query: { tag: tag } }"
                   >
-                    <q-chip :label="tag" size="sm" color="secondary" text-color="dark" class="q-mr-xs" />
+                    <span class="tag-pill">{{ tag }}</span>
                   </router-link>
                 </div>
               </div>
-              <!-- 文章标题 -->
-              <div class="col full-width full-height text-h3 text-white text-weight-bold">
-                <router-link
-                  style="color: inherit; align-self: start; text-decoration: none"
-                  :to="'/article/' + article._id"
-                >
+              <h2 class="article-title-overlay">
+                <router-link :to="'/article/' + article._id">
                   {{ article.title }}
                 </router-link>
-              </div>
-              <div class="col full-width full-height"></div>
+              </h2>
             </div>
           </div>
-
-          <!-- 文章内容 -->
-          <div class="preview-clamp">
-            <MdPreview
-              :modelValue="article.content || ''"
-              language="zh-CN"
-            />
+          <div class="article-body">
+            <div class="article-preview">
+              <MdPreview :modelValue="article.content || ''" language="zh-CN" />
+            </div>
+            <div class="article-footer">
+              <router-link
+                :to="{ name: 'user', params: { id: article.author?._id } }"
+                class="article-author"
+              >
+                <q-avatar size="28px" class="q-mr-sm">
+                  <img :src="article.author?.avatar_url || '/favicon.ico'" />
+                </q-avatar>
+                <span>{{ article.author?.username }}</span>
+              </router-link>
+              <router-link :to="'/article/' + article._id" class="read-more">
+                阅读全文 <span class="arrow">&rarr;</span>
+              </router-link>
+            </div>
           </div>
-          <!-- "阅读全文"按钮 -->
-          <q-btn :to="'/article/' + article._id" flat no-caps class="float-right text-accent">
-            <q-item-label caption>阅读全文 &rarr;</q-item-label>
-          </q-btn>
+        </div>
+
+        <!-- Without preview image -->
+        <div v-else class="article-card article-card--simple">
+          <div class="article-simple-content">
+            <div class="article-simple-header">
+              <div class="article-simple-left">
+                <h2 class="article-title">
+                  <router-link :to="'/article/' + article._id">
+                    {{ article.title }}
+                  </router-link>
+                </h2>
+                <div class="article-simple-meta">
+                  <span class="article-date">{{ moment(article?.created_at).format('YYYY年M月D日') }}</span>
+                  <div v-if="article?.tags" class="article-tags">
+                    <router-link
+                      v-for="tag in article?.tags"
+                      :key="tag"
+                      :to="{ name: 'home', query: { tag: tag } }"
+                    >
+                      <span class="tag-pill">{{ tag }}</span>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+              <router-link
+                :to="{ name: 'user', params: { id: article.author?._id } }"
+                class="article-author-simple"
+              >
+                <q-avatar size="40px">
+                  <img :src="article.author?.avatar_url || '/favicon.ico'" />
+                </q-avatar>
+              </router-link>
+            </div>
+            <div class="article-preview">
+              <MdPreview :modelValue="article.content || ''" language="zh-CN" />
+            </div>
+            <div class="article-footer">
+              <router-link :to="'/article/' + article._id" class="read-more">
+                阅读全文 <span class="arrow">&rarr;</span>
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
-    </q-list>
+    </div>
 
-    <!-- 分页 -->
-    <q-pagination
-      v-model="page"
-      @update:model-value="handlePageChange"
-      input
-      :max="maxPage"
-      class="self-center"
-      color="accent"
-      text-color="dark"
-    />
+    <!-- Pagination -->
+    <div class="pagination-wrapper q-mt-xl">
+      <q-pagination
+        v-model="page"
+        @update:model-value="handlePageChange"
+        input
+        :max="maxPage"
+        class="pagination"
+        color="accent"
+        text-color="dark"
+        active-design="unelevated"
+        active-color="accent"
+        active-text-color="white"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.a {
-  text-decoration: none;
-}
-
-.search-input {
-  width: 80%;
-}
-
-.overlay-text {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.search-section {
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  z-index: 1;
-  text-shadow: 2px 2px 2px #00000044;
 }
 
-.preview-clamp {
+.search-input-wrapper {
+  width: 100%;
+  max-width: 560px;
+}
+
+.search-input :deep(.q-field__control) {
+  border-radius: 14px !important;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  padding: 4px 8px 4px 16px;
+  min-height: 52px;
+  transition: all 0.2s ease;
+}
+
+.search-input :deep(.q-field__control:hover) {
+  border-color: #cbd5e1;
+}
+
+.search-input :deep(.q-field--focused .q-field__control) {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+}
+
+.search-icon {
+  color: #94a3b8;
+  font-size: 1.25rem;
+}
+
+.clear-icon {
+  color: #cbd5e1;
+  font-size: 1.1rem;
+  margin-right: 4px;
+}
+
+.clear-icon:hover {
+  color: #94a3b8;
+}
+
+.search-btn {
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+}
+
+.tag-checkbox :deep(.q-checkbox__label) {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.article-item {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.article-item:nth-child(1) { animation-delay: 0s; }
+.article-item:nth-child(2) { animation-delay: 0.08s; }
+.article-item:nth-child(3) { animation-delay: 0.16s; }
+.article-item:nth-child(4) { animation-delay: 0.24s; }
+.article-item:nth-child(5) { animation-delay: 0.32s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.article-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.article-card:hover {
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 12px 48px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+.article-card--featured .article-image-wrapper {
   position: relative;
-  max-height: 400px;
+  width: 100%;
+  height: 320px;
   overflow: hidden;
 }
 
-/* 底部渐变遮罩，避免硬截断 */
-.preview-clamp::after {
+.article-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.article-card--featured:hover .article-image {
+  transform: scale(1.03);
+}
+
+.article-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.2) 50%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+}
+
+.article-meta-overlay {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.article-date {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.article-tags-overlay {
+  display: flex;
+  gap: 6px;
+}
+
+.tag-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tag-pill:hover {
+  background: rgba(37, 99, 235, 0.8);
+}
+
+.article-title-overlay a {
+  font-family: 'Plus Jakarta Sans', 'PingFang SC', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: color 0.2s ease;
+}
+
+.article-title-overlay a:hover {
+  color: #93c5fd;
+}
+
+.article-body {
+  padding: 24px 28px 20px;
+}
+
+.article-preview {
+  position: relative;
+  max-height: 280px;
+  overflow: hidden;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.article-preview::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 40px;
-  background: linear-gradient(to bottom, transparent, white);
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, #ffffff);
   pointer-events: none;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.article-author {
+  display: flex;
+  align-items: center;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.article-author:hover {
+  color: #2563eb;
+}
+
+.read-more {
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.read-more:hover {
+  gap: 8px;
+}
+
+.arrow {
+  transition: transform 0.2s ease;
+}
+
+.read-more:hover .arrow {
+  transform: translateX(3px);
+}
+
+/* Simple card style */
+.article-card--simple {
+  padding: 28px;
+}
+
+.article-simple-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.article-simple-left {
+  flex: 1;
+}
+
+.article-title {
+  font-family: 'Plus Jakarta Sans', 'PingFang SC', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 10px 0;
+}
+
+.article-title a {
+  color: #0f172a;
+  transition: color 0.2s ease;
+}
+
+.article-title a:hover {
+  color: #2563eb;
+}
+
+.article-simple-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.article-simple-meta .article-date {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.article-tags {
+  display: flex;
+  gap: 6px;
+}
+
+.article-tags .tag-pill {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.article-tags .tag-pill:hover {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.article-author-simple {
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination :deep(.q-btn) {
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .article-card--featured .article-image-wrapper {
+    height: 220px;
+  }
+  
+  .article-title-overlay a {
+    font-size: 1.3rem;
+  }
+  
+  .article-image-overlay {
+    padding: 20px;
+  }
+  
+  .article-card--simple {
+    padding: 20px;
+  }
+  
+  .article-title {
+    font-size: 1.15rem;
+  }
+  
+  .article-body {
+    padding: 20px;
+  }
+  
+  .article-simple-header {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+  
+  .article-author-simple {
+    margin-left: 0;
+    margin-bottom: 12px;
+  }
 }
 </style>
