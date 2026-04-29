@@ -72,15 +72,6 @@ onBeforeRouteUpdate(() => {
       </div>
     </div>
 
-    <!-- [预留] 编辑器顶部横幅图片位 -->
-    <div class="editor-image-banner">
-      <div class="editor-image-placeholder">
-        <q-icon name="panorama" size="2rem" color="blue-3" />
-        <span class="editor-image-placeholder-text">[预留] 编辑器顶部横幅图片</span>
-        <span class="editor-image-placeholder-hint">建议尺寸 1200×180，可为空</span>
-      </div>
-    </div>
-
     <!-- Editor Component -->
     <div class="editor-body">
       <ArticleEditor v-if="createMode" create-mode />

@@ -5,6 +5,7 @@ import { onBeforeMount, ref } from 'vue'
 import moment from 'moment'
 
 const featuredArticles = ref<ArticleDocumentResponse[]>([])
+const slide = ref('1') // 轮播图当前页绑定
 
 onBeforeMount(async () => {
   try {
@@ -18,7 +19,7 @@ onBeforeMount(async () => {
 
 <template>
   <q-page class="home-page">
-    <!-- Hero Section -->
+    <!-- 首图板块 -->
     <section class="hero-section">
       <div class="hero-left">
         <h1 class="hero-title">
@@ -46,30 +47,35 @@ onBeforeMount(async () => {
           </div>
         </div>
       </div>
-
-      <!-- [预留] 轮播图 / Hero 插图区域
-           建议尺寸：800 x 360px
-           可放置多张技术/生活相关的高清图片进行轮播展示
-           当前使用占位样式展示区域位置 -->
+      <!-- 轮播图 -->
       <div class="hero-visual">
-        <div class="hero-carousel">
-          <div class="carousel-slide carousel-slide--active">
-            <div class="carousel-placeholder">
-              <q-icon name="photo_library" size="3rem" color="blue-3" />
-              <span class="carousel-placeholder-text">[预留] 轮播图区域</span>
-              <span class="carousel-placeholder-hint">建议放置 800×360 的横幅图片</span>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-dots">
-          <span class="carousel-dot carousel-dot--active"></span>
-          <span class="carousel-dot"></span>
-          <span class="carousel-dot"></span>
-        </div>
+        <q-carousel
+          v-model="slide"
+          animated
+          infinite
+          autoplay
+          arrows
+          navigation
+          transition-prev="slide-right"
+          transition-next="slide-left"
+          control-color="white"
+          control-text-color="grey-8"
+          class="hero-carousel shadow-2 rounded-boarders"
+        >
+          <q-carousel-slide name="1" class="q-pa-none">
+            <img src="../../images/pexels-alphaen-15601235.jpg" alt="图片无法显示" class="carousel-img" draggable="false">
+          </q-carousel-slide>
+          <q-carousel-slide name="2" class="q-pa-none">
+            <img src="../../images/pexels-jean-daniel-4006158.jpg" alt="图片无法显示" class="carousel-img" draggable="false">
+          </q-carousel-slide>
+          <q-carousel-slide name="3" class="q-pa-none">
+            <img src="../../images/pexels-eberhardgross-443446.jpg" alt="图片无法显示" class="carousel-img" draggable="false">
+          </q-carousel-slide>
+        </q-carousel>
       </div>
     </section>
 
-    <!-- Featured Articles -->
+    <!-- 精选文章板块 -->
     <section v-if="featuredArticles.length > 0" class="featured-section">
       <div class="section-header">
         <h2 class="section-title">精选文章</h2>
@@ -122,11 +128,11 @@ onBeforeMount(async () => {
 /* ===== Hero Section ===== */
 .hero-section {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
   align-items: center;
-  margin-bottom: 48px;
-  padding: 48px 40px;
+  margin-bottom: 28px;
+  padding: 48px 200px 48px 20px;
   background: linear-gradient(135deg, #f8fafc 0%, #DFB871 50%, #F7B324 100%);
   border-radius: 28px;
   border: 1px solid #e2e8f0;
@@ -172,7 +178,6 @@ onBeforeMount(async () => {
   font-size: 1.05rem;
   line-height: 1.7;
   margin: 0 0 28px 0;
-  max-width: 400px;
 }
 
 .hero-stats {
@@ -211,62 +216,34 @@ onBeforeMount(async () => {
 .hero-visual {
   position: relative;
   z-index: 1;
+  max-width: 420px;
 }
 
 .hero-carousel {
   border-radius: 20px;
   overflow: hidden;
   background: #ffffff;
-  border: 2px dashed #dbeafe;
+  border: 1px solid #e2e8f0;
   box-shadow: 0 8px 32px rgba(37, 99, 235, 0.08);
+  /* 保持 3:2 比例 */
+  aspect-ratio: 3 / 2;
 }
 
-.carousel-slide {
+/* 让图片填满 slide */
+.carousel-img {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.carousel-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: #94a3b8;
+/* 自定义导航点颜色，匹配你的主题 */
+.hero-carousel :deep(.q-carousel__navigation-inner .q-btn) {
+  color: #ffffff !important;
 }
 
-.carousel-placeholder-text {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.carousel-placeholder-hint {
-  font-size: 0.75rem;
-  color: #94a3b8;
-}
-
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.carousel-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #e2e8f0;
-  transition: all 0.2s ease;
-}
-
-.carousel-dot--active {
-  width: 24px;
-  border-radius: 4px;
-  background: #2563eb;
+.hero-carousel :deep(.q-carousel__navigation-inner .q-btn--active) {
+  color: #2563eb !important;
 }
 
 /* ===== Featured Section ===== */

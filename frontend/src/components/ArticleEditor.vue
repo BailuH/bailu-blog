@@ -87,15 +87,6 @@ function handleRemoveTag(tag: string) {
 
 <template>
   <div class="editor-page">
-    <div class="editor-header">
-      <h2 class="editor-title">
-        {{ createMode ? '写文章' : '编辑文章' }}
-      </h2>
-      <p class="editor-subtitle">
-        {{ createMode ? '分享你的见解与故事' : '修改并完善你的文章' }}
-      </p>
-    </div>
-
     <div class="editor-card">
       <!-- Title -->
       <div class="form-section">
