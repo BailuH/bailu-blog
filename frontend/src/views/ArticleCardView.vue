@@ -108,17 +108,13 @@ watch(() => route.params.id, async () => {
           </div>
         </div>
 
-        <!-- [预留] 广告/推荐位 -->
-        <div class="sidebar-card sidebar-card--placeholder">
+        <!-- 广告/推荐位 -->
+        <div class="sidebar-card">
           <div class="sidebar-card-header">
             <q-icon name="campaign" size="1rem" class="q-mr-sm" />
             推荐位
           </div>
-          <div class="placeholder-box">
-            <q-icon name="image" size="2rem" color="blue-3" />
-            <span class="placeholder-text">[预留] 侧边广告/推广位</span>
-            <span class="placeholder-hint">建议尺寸 280×200</span>
-          </div>
+          <img src="../../images/pexels-mdsnmdsnmdsn-1831234.jpg" class="sidebar-promo-img" alt="推荐" />
         </div>
 
         <!-- Author's Other Articles -->
@@ -187,17 +183,13 @@ watch(() => route.params.id, async () => {
           </div>
         </div>
 
-        <!-- [预留] 二维码/公众号位 -->
-        <div class="sidebar-card sidebar-card--placeholder">
+        <!-- 二维码/公众号位 -->
+        <div class="sidebar-card">
           <div class="sidebar-card-header">
             <q-icon name="qr_code" size="1rem" class="q-mr-sm" />
             关注我
           </div>
-          <div class="placeholder-box">
-            <q-icon name="qr_code_scanner" size="2.5rem" color="blue-3" />
-            <span class="placeholder-text">[预留] 二维码/公众号</span>
-            <span class="placeholder-hint">建议尺寸 200×200</span>
-          </div>
+          <img src="../../images/pexels-alphaen-15601235.jpg" class="sidebar-qr-img" alt="关注我" />
         </div>
       </aside>
     </div>
@@ -390,31 +382,14 @@ watch(() => route.params.id, async () => {
   color: #94a3b8;
 }
 
-/* Placeholder */
-.sidebar-card--placeholder {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
-.placeholder-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 24px;
+/* Promo & QR images */
+.sidebar-promo-img,
+.sidebar-qr-img {
+  width: 100%;
+  height: auto;
   border-radius: 12px;
-  border: 2px dashed #e2e8f0;
-}
-
-.placeholder-text {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.placeholder-hint {
-  font-size: 0.72rem;
-  color: #94a3b8;
+  object-fit: cover;
+  display: block;
 }
 
 @media (max-width: 900px) {

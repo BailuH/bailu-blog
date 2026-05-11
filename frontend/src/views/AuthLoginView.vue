@@ -19,13 +19,9 @@ import AuthLoginForm from '@/components/AuthLoginForm.vue'
             登录后，你可以创作文章、参与讨论、与作者们互动。
           </p>
 
-          <!-- [预留] 品牌插图区域 -->
+          <!-- 品牌插图 -->
           <div class="auth-brand-illustration">
-            <div class="illustration-placeholder">
-              <q-icon name="draw" size="3rem" color="blue-3" />
-              <span class="illustration-text">[预留] 品牌插图</span>
-              <span class="illustration-hint">建议放置与写作/技术相关的插图</span>
-            </div>
+            <img src="../../images/haninabz-meditation-8389494_1920.jpg" class="brand-illustration-img" alt="品牌插图" />
           </div>
 
           <div class="auth-brand-features">
@@ -114,30 +110,13 @@ import AuthLoginForm from '@/components/AuthLoginForm.vue'
   margin-bottom: 28px;
 }
 
-.illustration-placeholder {
+.brand-illustration-img {
   width: 100%;
   aspect-ratio: 4 / 3;
   max-height: 240px;
   border-radius: 20px;
-  border: 2px dashed #e2e8f0;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #94a3b8;
-}
-
-.illustration-text {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.illustration-hint {
-  font-size: 0.75rem;
-  color: #94a3b8;
+  object-fit: cover;
+  display: block;
 }
 
 /* Features */

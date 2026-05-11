@@ -31,13 +31,9 @@ onBeforeMount(async () => {
           </p>
         </div>
 
-        <!-- [预留] 社区成员横幅插图 -->
+        <!-- 社区成员横幅插图 -->
         <div class="users-banner-visual">
-          <div class="banner-placeholder">
-            <q-icon name="groups" size="3rem" color="blue-3" />
-            <span class="banner-placeholder-text">[预留] 社区插图</span>
-            <span class="banner-placeholder-hint">建议放置多人协作/社区主题插图</span>
-          </div>
+          <img src="../../images/doodleplaystudio-wall-art-10162713_1920.jpg" class="banner-img" alt="社区插图" />
         </div>
       </div>
 
@@ -139,31 +135,14 @@ onBeforeMount(async () => {
   justify-content: center;
 }
 
-.banner-placeholder {
+.banner-img {
   width: 100%;
   aspect-ratio: 1;
   max-height: 200px;
   border-radius: 20px;
-  border: 2px dashed #dbeafe;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  color: #94a3b8;
+  object-fit: cover;
+  display: block;
   box-shadow: 0 4px 16px rgba(37, 99, 235, 0.06);
-}
-
-.banner-placeholder-text {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.banner-placeholder-hint {
-  font-size: 0.72rem;
-  color: #94a3b8;
 }
 
 /* ===== Stats ===== */

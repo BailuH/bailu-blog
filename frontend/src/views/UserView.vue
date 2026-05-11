@@ -36,13 +36,8 @@ onMounted(async () => {
   <q-page v-if="user" class="profile-page">
     <!-- Cover Banner -->
     <div class="profile-cover">
-      <!-- [预留] 用户封面背景图 -->
       <div class="profile-cover-image">
-        <div class="cover-placeholder">
-          <q-icon name="panorama" size="2.5rem" color="blue-3" />
-          <span class="cover-placeholder-text">[预留] 用户封面背景图</span>
-          <span class="cover-placeholder-hint">建议尺寸 1200×240，可设置个性封面</span>
-        </div>
+        <img src="../../images/pexels-benny-hassum-162810415-15164210.jpg" class="cover-img" alt="用户封面" />
       </div>
       <div class="profile-cover-overlay"></div>
     </div>
@@ -73,6 +68,13 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #dbeafe 100%);
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .cover-placeholder {

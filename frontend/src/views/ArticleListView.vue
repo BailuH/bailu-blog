@@ -97,10 +97,7 @@ onBeforeMount(async () => {
               :src="article.preview_image_url"
               class="featured-image"
             />
-            <div v-else class="featured-image-placeholder">
-              <q-icon name="article" size="2rem" color="blue-3" />
-              <span>暂未设置文章封面噢</span>
-            </div>
+            <img v-else src="../../images/pexels-codioful-7135013.jpg" class="featured-image" alt="文章封面" />
           </div>
           <div class="featured-body">
             <h3 class="featured-title">{{ article.title }}</h3>

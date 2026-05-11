@@ -19,13 +19,9 @@ import GptWriterForm from '@/components/GptWriterForm.vue'
         </div>
       </div>
 
-      <!-- [预留] AI 助手插图 -->
+      <!-- AI 助手插图 -->
       <div class="gpt-banner-visual">
-        <div class="gpt-visual-placeholder">
-          <q-icon name="smart_toy" size="3rem" color="blue-3" />
-          <span class="gpt-visual-text">[预留] AI 助手插图</span>
-          <span class="gpt-visual-hint">建议放置与 AI/写作相关的插图</span>
-        </div>
+        <img src="../../images/pexels-eberhardgross-443446.jpg" class="gpt-visual-img" alt="AI 助手" />
       </div>
     </div>
 
@@ -133,30 +129,13 @@ import GptWriterForm from '@/components/GptWriterForm.vue'
   z-index: 1;
 }
 
-.gpt-visual-placeholder {
+.gpt-visual-img {
   width: 100%;
   aspect-ratio: 1;
   max-height: 180px;
   border-radius: 20px;
-  border: 2px dashed rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.04);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.gpt-visual-text {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.gpt-visual-hint {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  display: block;
 }
 
 /* ===== Features ===== */
